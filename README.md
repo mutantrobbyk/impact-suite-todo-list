@@ -1,3 +1,9 @@
+# ADDED INSTRUCTIONS FROM ROB
+### Running server with nodemon
+In the package.json file add a "main" key with value of the path to the server file, in our case server/index.js
+
+### Seed.sql file contains initial needed database seed for tables
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +74,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### Running server with nodemon
+
+In the package.json file add a "main" key with value of the path to the server file, in our case server/index.js
