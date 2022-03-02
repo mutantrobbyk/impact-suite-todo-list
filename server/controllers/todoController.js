@@ -25,12 +25,12 @@ module.exports = {
     const db = req.app.get('db');
     //TODO ROB insert this once tasks are a part of the mix
     // await db.delete_tasks({todo_id});
-    await db.todos.delete_todo([todo_id]);
-    res.sendStatus(200);
+    let todos = await db.todos.delete_todo([todo_id]);
+    res.status(200).send(todos);
   },
   getAllTodos: (req, res) => {
     const db = req.app.get('db');
-    const todos = db.get_todos().then(result => {
+    const todos = db.todos.get_all_todos().then(result => {
       res.status(200).send(result);
     }).catch(err => res.sendStatus(400));
   },

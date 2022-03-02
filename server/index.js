@@ -14,6 +14,7 @@ app.use(express.json());
 //ENDPOINTS
 //todo endpoints
 app.get('/api/todo/:todo_id', todoCtrl.getTodo);
+app.get('/api/todos', todoCtrl.getAllTodos);
 app.post('/api/todo', todoCtrl.addTodo);
 app.delete('/api/todo/:todo_id', todoCtrl.deleteTodo);
 app.put('/api/todo/:todo_id', todoCtrl.updateTodo);
@@ -21,7 +22,6 @@ app.put('/api/todo/:todo_id', todoCtrl.updateTodo);
 //category endpoints
 app.get('/api/categories');
 app.get('/api/category');
-app.get('/api/todos');
 app.post('/api/categories');
 
 
