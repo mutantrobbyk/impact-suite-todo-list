@@ -37,7 +37,7 @@ const CategoryContainer = () => {
           <Card sx={{ maxHeight:300, overflowY: 'scroll' }} variant="outlined">{card(true)}</Card>
         </Box>
       </div>
-      <Icon sx={{ color: blue[500] }}>add_circle</Icon>
+      {/* <Icon sx={{ color: blue[500] }}>add_circle</Icon> */}
       <div>
         {categories.map((category) => (
           <div key={category.id}>

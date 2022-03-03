@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { TodosContext } from "../context/todosContext";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -14,13 +15,14 @@ import { green } from "@mui/material/colors";
 */
 const Category = (props) => {
   const { staticCategory } = props;
-  let [todos, setTodos] = useState([]);
   let [todoText, setTodoText] = useState('');
+
+  const [state, dispatch] = useContext(TodosContext);
   
   useEffect(() => {
     if (staticCategory) {
       axios.get("/api/todos").then((result) => {
-        setTodos(result.data);
+        dispatch({type: "GET_TODOS", payload: result.data});
       });
     }
   }, []);
@@ -28,21 +30,20 @@ const Category = (props) => {
   const addTodo = () => {
     if(!todoText) return;
     axios.post('/api/todo', {title: todoText}).then(result => {
-      setTodos(result.data);
+      dispatch({type: "ADD_TODO", payload: result.data});
       setTodoText('');
     })
   }
 
   const deleteTodo = (id) => {
     axios.delete(`/api/todo/${id}`).then(result => {
-      setTodos(result.data);
+      dispatch({type: "DELETE_TODO", payload: result.data});
     });
   }
 
   const captureTodoText = (e) => {
     setTodoText(e.target.value)
   }
-
   return (
     <div>
       <Box
@@ -57,7 +58,7 @@ const Category = (props) => {
         <Icon onClick={addTodo} sx={{ color: green[500], maxWidth: 25 }}>add_circle</Icon>
       </Box>
       <List>
-        {todos.map((todo) => (
+        {state.todos && state.todos.map((todo) => (
           <div key={todo.id}>
             <Todo deleteTodo={deleteTodo} todo={todo} />
           </div>

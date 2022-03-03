@@ -1,8 +1,27 @@
 # ADDED INSTRUCTIONS FROM ROB
-### Running server with nodemon
+-Running server with nodemon
 In the package.json file add a "main" key with value of the path to the server file, in our case server/index.js
 
-### Seed.sql file contains initial needed database seed for tables
+Seed.sql file contains initial needed database seed for tables
+
+Need to create some environment variables for the connection string to your postgres instance, and selecting a server port.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Getting Started with Create React App
 
