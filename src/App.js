@@ -1,5 +1,5 @@
 import "./App.css";
-import CategoryContainer from "./components/CategoryContainer";
+import TodoContainer from "./components/TodoContainer";
 import NavBar from "./components/NavBar";
 import { TodosContextProvider } from "./context/todosContext";
 
@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <NavBar />
       <TodosContextProvider>
-        <CategoryContainer />
+        <TodoContainer />
       </TodosContextProvider>
     </div>
   );

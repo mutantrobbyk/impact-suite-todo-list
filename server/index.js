@@ -19,10 +19,8 @@ app.post('/api/todo', todoCtrl.addTodo);
 app.delete('/api/todo/:todo_id', todoCtrl.deleteTodo);
 app.put('/api/todo/:todo_id', todoCtrl.updateTodo);
 
-//category endpoints
-app.get('/api/categories');
-app.get('/api/category');
-app.post('/api/categories');
+//batchLoad endpoints
+app.post('/api/batchedTodos', todoCtrl.batchedTodos)
 
 
 massive({
