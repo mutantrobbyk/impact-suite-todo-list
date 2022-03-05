@@ -23,6 +23,13 @@ const reducer = (state, action) => {
       return {
         todos: [...tempTodosArray],
       };
+    case "UPDATE_TODO":
+      let tempUpdatedTodos = state.todos
+      const index = tempUpdatedTodos.findIndex((todo) => todo.id === action.payload[0].id);
+      tempUpdatedTodos.splice(index, 1, action.payload[0]);
+      return {
+        todos: [...tempUpdatedTodos],
+      };
   }
 };
 

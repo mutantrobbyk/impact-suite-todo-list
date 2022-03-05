@@ -14,13 +14,11 @@ module.exports = {
     }
   },
   updateTodo: async (req, res) => {
-    const { title, description, category_id } = req.body;
+    const { title } = req.body;
     const { todo_id } = req.params;
     const db = req.app.get("db");
     const updatedTodo = await db.todos.update_todo({
       title,
-      description,
-      category_id,
       todo_id,
     });
     if (updatedTodo) {
@@ -66,17 +64,21 @@ module.exports = {
       res.status(400).send({ message: "Cannot get todo" });
     }
   },
-  batchedTodos: async (req, res) => {
-    const { deletedTodos, addedTodos } = req.body;
-    console.log('DELETED', deletedTodos)
-    console.log('ADDED', addedTodos)
+  batchedTodos: async (req, res, next) => {
+    const { deletedTodos, addedTodos, updatedTodos } = req.body;
     const db = req.app.get("db");
-    await deletedTodos.forEach(todo => {
-       return db.todos.destroy(todo);
+    await updatedTodos.forEach((todo) => {
+      db.todos.update_todo({ title: todo.title, todo_id: todo.id });
+    });
+    await deletedTodos.forEach((todo) => {
+      return db.todos.destroy(todo);
     });
     await db.todos.insert(addedTodos);
-    db.todos.get_all_todos().then((result) => {
-      res.status(200).send(result);
-    });
+    //running into a race condition here with updateTodos. Even though
+    //we wait until that db call is done before even moving on to
+    //deleted and added, our next function call which is simply
+    //retrieving all todos, it does not reflect the newly updated 
+    //columns.  Have temp fix in place for better UX
+    next();
   },
 };

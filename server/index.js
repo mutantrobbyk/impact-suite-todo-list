@@ -20,7 +20,7 @@ app.delete('/api/todo/:todo_id', todoCtrl.deleteTodo);
 app.put('/api/todo/:todo_id', todoCtrl.updateTodo);
 
 //batchLoad endpoints
-app.post('/api/batchedTodos', todoCtrl.batchedTodos)
+app.post('/api/batchedTodos', todoCtrl.batchedTodos, todoCtrl.getAllTodos)
 
 
 massive({

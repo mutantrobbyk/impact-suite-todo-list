@@ -7,22 +7,32 @@ import TodoDisplay from "./TodoDisplay";
 import List from "@mui/material/List";
 import Icon from "@mui/material/Icon";
 import Switch from "@mui/material/Switch";
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { green } from "@mui/material/colors";
-import { addLocalTodo, deleteLocalTodo, batchLoadObject } from "../localStorageFunctions";
-import { isEmpty } from 'lodash'
+import {
+  addLocalTodo,
+  deleteLocalTodo,
+  batchLoadObject,
+  updateLocalTodo,
+} from "../localStorageFunctions";
+import { isEmpty } from "lodash";
 
 const Todo = (props) => {
   let [todoText, setTodoText] = useState("");
   let [isOffline, setIsOffline] = useState(false);
-  let [tempTest, setTempTest] = useState(false)
+  let [tempTest, setTempTest] = useState(false);
 
   const [state, dispatch] = useContext(TodosContext);
 
+  const getTodos = () => {
+    axios.get("/api/todos").then((result) => {
+      dispatch({ type: "GET_TODOS", payload: result.data });
+    });
+  };
+
   useEffect(() => {
     if (!isOffline) {
-      axios.get("/api/todos").then((result) => {
-        dispatch({ type: "GET_TODOS", payload: result.data });
-      });
+      getTodos();
     }
   }, []);
 
@@ -40,14 +50,24 @@ const Todo = (props) => {
   };
 
   const deleteTodo = (id, isTemp) => {
-    console.log("HIT BABY")
     if (isOffline) {
       deleteLocalTodo(id, isTemp);
       //TODO FIX THIS, ITS JANKY, FIGURE OUT ANOTHER WAY TO REFRESH STATE
-      setTempTest(!tempTest)
+      setTempTest(!tempTest);
     } else {
       axios.delete(`/api/todo/${id}`).then((result) => {
         dispatch({ type: "DELETE_TODO", payload: result.data });
+      });
+    }
+  };
+
+  const updateTodo = (id, body, isTemp) => {
+    if (isOffline) {
+      updateLocalTodo(id, body, isTemp);
+      setTempTest(!tempTest);
+    } else {
+      axios.put(`/api/todo/${id}`, body).then((result) => {
+        dispatch({ type: "UPDATE_TODO", payload: result.data });
       });
     }
   };
@@ -64,11 +84,18 @@ const Todo = (props) => {
 
   const goOnline = () => {
     setIsOffline(!isOffline);
-    const itemsToBatchLoad = batchLoadObject()
-    if (isEmpty(itemsToBatchLoad.deletedTodos) && isEmpty(itemsToBatchLoad.addedTodos)) return;
-    axios.post('/api/batchedTodos', itemsToBatchLoad).then(result => {
+    const itemsToBatchLoad = batchLoadObject();
+    if (
+      isEmpty(itemsToBatchLoad.deletedTodos) &&
+      isEmpty(itemsToBatchLoad.addedTodos) &&
+      isEmpty(itemsToBatchLoad.updatedTodos)
+    )
+      return;
+    axios.post("/api/batchedTodos", itemsToBatchLoad).then((result) => {
       dispatch({ type: "GET_TODOS", payload: result.data });
-    })
+    });
+    //TODO make this better. ran into race condition, will also leave note in controller.
+    getTodos();
   };
 
   let todos = isOffline
@@ -100,14 +127,17 @@ const Todo = (props) => {
         {todos &&
           todos.map((todo) => (
             <div key={todo.id || todo.tempId}>
-              <TodoDisplay deleteTodo={deleteTodo} todo={todo} />
+              <TodoDisplay
+                deleteTodo={deleteTodo}
+                todo={todo}
+                updateTodo={updateTodo}
+              />
             </div>
           ))}
       </List>
-      <Switch
-        label="Go Offline"
+      <FormControlLabel control={<Switch
         onChange={isOffline ? () => goOnline() : () => goOffline()}
-      />
+      />} label={isOffline ? 'Go Online' : 'Go Offline'} />
     </div>
   );
 };

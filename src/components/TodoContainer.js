@@ -3,20 +3,16 @@ import Todo from "./Todo";
 import Typography from "@mui/material/Typography";
 
 const TodoContainer = () => {
-  const card = (staticCategory) => (
+  const card = () => (
     <React.Fragment>
-        <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-          Todos
-        </Typography>
-        <Todo staticCategory={staticCategory} />
+      <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
+        Todos
+      </Typography>
+      <Todo />
     </React.Fragment>
   );
 
-  return (
-      <div style={{marginLeft: 100}}>
-            {card(true)}
-      </div>
-  );
+  return <div style={{ marginLeft: 100, width: "50vw" }}>{card()}</div>;
 };
 
 export default TodoContainer;
